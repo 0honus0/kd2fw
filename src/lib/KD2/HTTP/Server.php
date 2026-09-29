@@ -93,11 +93,17 @@ class Server
 			$start = $match[1] === '' ? null : (int) $match[1];
 			$end   = $match[2] === '' ? null : (int) $match[2];
 
+			// HTTP byte ranges use an inclusive end offset;
+			// the implementation below uses an exclusive end offset.
+			if ($start !== null && $end !== null) {
+				$end++;
+			}
+
 			if (null !== $start && $start < 0) {
 				throw new \LogicException('Start range cannot be satisfied', 416);
 			}
 
-			if (isset($size) && $start > $size) {
+			if (isset($size) && $start >= $size) {
 				throw new \LogicException('End range cannot be satisfied', 416);
 			}
 		}
@@ -128,7 +134,7 @@ class Server
 		if (isset($content)) {
 			$length = strlen($content);
 
-			if ($start || $end) {
+			if ($start !== null || $end !== null) {
 				if (null !== $end && $end > $length) {
 					header('Content-Range: bytes */' . $length, true);
 					throw new \LogicException('End range cannot be satisfied', 416);
@@ -176,7 +182,7 @@ class Server
 
 		http_response_code(200);
 
-		if (($start || $end) && $seek === 0) {
+		if (($start !== null || $end !== null) && $seek === 0) {
 			if (null !== $end && $end > $length) {
 				header('Content-Range: bytes */' . $length, true);
 				throw new \LogicException('End range cannot be satisfied', 416);

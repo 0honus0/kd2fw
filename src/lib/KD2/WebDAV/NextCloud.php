@@ -267,6 +267,8 @@ abstract class NextCloud
 		// https://docs.nextcloud.com/server/latest/developer_manual/client_apis/WebDAV/chunking.html
 		'remote.php/webdav/uploads/' => 'chunked',
 		'remote.php/dav/uploads/' => 'chunked',
+		'dav/uploads/' => 'chunked',
+		'webdav/uploads/' => 'chunked',
 
 		// There's just 3 or 4 different endpoints for avatars, this is ridiculous
 		'remote.php/dav/avatars/' => 'avatar',
@@ -999,7 +1001,7 @@ abstract class NextCloud
 		$this->requireAuth();
 		$user = $this->getUserName();
 
-		$r = '!^remote\.php/dav/uploads/([^/]+)/([\w\d_-]+)(?:/([\w\d_-]+))?(?:/\.file)?$!';
+		$r = '!^(?:(?:remote\.php/)?(?:dav|webdav)/)uploads/([^/]+)/([\w\d_-]+)(?:/([\w\d_-]+))?(?:/\.file)?/?$!';
 
 		if (!preg_match($r, $uri, $match)) {
 			throw new Exception('Invalid URL for chunk upload', 400);
@@ -1073,7 +1075,7 @@ abstract class NextCloud
 				$out .= '<d:response>' . PHP_EOL;
 				$chunk = '/' . $uri . '/' . $chunk;
 				$out .= sprintf('<d:href>%s</d:href>', htmlspecialchars($chunk, ENT_XML1)) . PHP_EOL;
-				$out .= '<d:propstat><d:prop><d:getcontenttype>application/octet-stream</d:getcontenttype><d:resoucetype/></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat>' . PHP_EOL;
+				$out .= '<d:propstat><d:prop><d:getcontenttype>application/octet-stream</d:getcontenttype><d:resourcetype/></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat>' . PHP_EOL;
 				$out .= '</d:response>' . PHP_EOL;
 			}
 
