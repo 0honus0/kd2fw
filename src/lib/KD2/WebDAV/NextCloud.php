@@ -1075,7 +1075,7 @@ abstract class NextCloud
 				$out .= '<d:response>' . PHP_EOL;
 				$chunk = '/' . $uri . '/' . $chunk;
 				$out .= sprintf('<d:href>%s</d:href>', htmlspecialchars($chunk, ENT_XML1)) . PHP_EOL;
-				$out .= '<d:propstat><d:prop><d:getcontenttype>application/octet-stream</d:getcontenttype><d:resourcetype/></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat>' . PHP_EOL;
+				$out .= '<d:propstat><d:prop><d:getcontenttype>application/octet-stream</d:getcontenttype><d:resoucetype/></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat>' . PHP_EOL;
 				$out .= '</d:response>' . PHP_EOL;
 			}
 
